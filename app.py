@@ -6,269 +6,156 @@ import time
 st.set_page_config(
     page_title="Trivia Telecom Orbital",
     page_icon="🌍",
-    layout="centered"
+    layout="wide"
 )
 
-# ---------------- PANTALLA DE CARGA ----------------
+# ---------------- INICIALIZACIONES ----------------
+if "ranking" not in st.session_state:
+    st.session_state.ranking = []
+
+if "nombre_usuario" not in st.session_state:
+    st.session_state.nombre_usuario = None
+
+if "inicio_tiempo" not in st.session_state:
+    st.session_state.inicio_tiempo = None
+
 if "app_iniciada" not in st.session_state:
     st.session_state.app_iniciada = False
 
+# ---------------- PANTALLA DE CARGA ----------------
 if not st.session_state.app_iniciada:
-
-    st.markdown("""
-        <h1 style='text-align:center; color:#38bdf8;'>
-        🛰️ Estableciendo Enlace Satelital...
-        </h1>
-    """, unsafe_allow_html=True)
-
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-
-    mensajes = [
-        "Inicializando sistema orbital...",
-        "Sincronizando satélite...",
-        "Ajustando vector de antena...",
-        "Estableciendo uplink...",
-        "Conexión establecida ✔"
-    ]
-
-    for i in range(0, 101, 5):
-        time.sleep(0.05)
-        progress_bar.progress(i)
-        status_text.markdown(
-            f"<p style='text-align:center; color:#cbd5e1;'>{mensajes[min(i//20,4)]}</p>",
-            unsafe_allow_html=True
-        )
-
-    time.sleep(0.5)
+    st.title("🛰️ Conectando con la Red Satelital...")
+    barra = st.progress(0)
+    for i in range(101):
+        time.sleep(0.02)
+        barra.progress(i)
     st.session_state.app_iniciada = True
     st.rerun()
 
-# ---------------- ESTILO COMPLETO ----------------
-st.markdown("""
-<style>
+# ---------------- DISEÑO DE COLUMNAS ----------------
+contenido, ranking_col = st.columns([3, 1])
 
-.stApp {
-    background: radial-gradient(circle at center, #0b1120, #020617);
-    overflow: hidden;
-}
+# ---------------- PANEL RANKING DERECHO ----------------
+with ranking_col:
+    st.markdown("## 🏆 Ranking Orbital")
 
-/* GRID DIGITAL */
-.stApp::before {
-    content: "";
-    position: fixed;
-    width: 200%;
-    height: 200%;
-    background-image:
-        linear-gradient(rgba(56,189,248,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,189,248,0.05) 1px, transparent 1px);
-    background-size: 80px 80px;
-    animation: moveGrid 80s linear infinite;
-    z-index: 0;
-}
+    if st.session_state.ranking:
+        ranking_ordenado = sorted(
+            st.session_state.ranking,
+            key=lambda x: x["tiempo"]
+        )
 
-@keyframes moveGrid {
-    from { transform: translate(0,0); }
-    to { transform: translate(-80px,-80px); }
-}
+        for i, jugador in enumerate(ranking_ordenado, start=1):
+            st.markdown(
+                f"""
+                <div style="
+                    background: rgba(15,23,42,0.7);
+                    padding:10px;
+                    margin-bottom:8px;
+                    border-radius:12px;
+                    border:1px solid rgba(56,189,248,0.3);
+                ">
+                <b>{i}. {jugador['nombre']}</b><br>
+                ⏱️ {jugador['tiempo']:.2f} seg
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+    else:
+        st.info("Sin registros aún.")
 
-/* -------- SISTEMA ORBITAL -------- */
+# ---------------- CONTENIDO PRINCIPAL ----------------
+with contenido:
 
-.orbit-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 280px;
-    height: 280px;
-    margin-top: -140px;
-    margin-left: -140px;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.35;
-}
+    st.title("🌍 Trivia Telecom Orbital")
+    st.divider()
 
-.earth {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #1e293b 70%);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    margin-top: -40px;
-    margin-left: -40px;
-    box-shadow: 0 0 12px rgba(56,189,248,0.25);
-}
+    # Pedir nombre si no existe
+    if not st.session_state.nombre_usuario:
+        nombre = st.text_input("👤 Ingrese su nombre para iniciar misión")
 
-.orbit {
-    position: absolute;
-    width: 240px;
-    height: 240px;
-    border: 1px dashed rgba(56,189,248,0.15);
-    border-radius: 50%;
-    top: 20px;
-    left: 20px;
-    animation: rotateOrbit 40s linear infinite;
-}
+        if st.button("🚀 Iniciar Misión"):
+            if nombre.strip() != "":
+                st.session_state.nombre_usuario = nombre
+                st.session_state.inicio_tiempo = time.time()
+                st.session_state.indice = 0
+                st.session_state.puntos = 0
+                st.session_state.juego_terminado = False
 
-.satellite-wrapper {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-}
+                st.session_state.pool_preguntas = [
+                    {"p": "¿Cuál es la capital de Venezuela?",
+                     "o": ["Maracaibo", "Caracas", "Valencia", "Coro"],
+                     "c": "Caracas"},
+                    {"p": "¿Qué planeta es conocido como el Planeta Rojo?",
+                     "o": ["Venus", "Marte", "Júpiter", "Saturno"],
+                     "c": "Marte"},
+                    {"p": "¿Cuántos bits tiene un byte?",
+                     "o": ["4", "16", "32", "8"],
+                     "c": "8"},
+                    {"p": "¿Qué elemento químico tiene el símbolo 'O'?",
+                     "o": ["Oro", "Osmio", "Oxígeno", "Hierro"],
+                     "c": "Oxígeno"},
+                ]
 
-.satellite {
-    font-size: 24px;
-    animation: counterRotate 40s linear infinite;
-}
+                random.shuffle(st.session_state.pool_preguntas)
+                st.rerun()
 
-@keyframes rotateOrbit {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+    else:
 
-@keyframes counterRotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-}
+        if not st.session_state.juego_terminado:
 
-/* -------- CONTENIDO PRINCIPAL -------- */
+            pregunta = st.session_state.pool_preguntas[st.session_state.indice]
 
-.block-container {
-    position: relative;
-    z-index: 1;
-    max-width: 750px;
-    margin: auto;
-    padding-top: 2rem;
-    background: rgba(2, 6, 23, 0.65);
-    backdrop-filter: blur(4px);
-    border-radius: 18px;
-    padding: 30px;
-}
+            st.subheader(f"Pregunta {st.session_state.indice + 1}")
+            st.write(f"### {pregunta['p']}")
 
-html, body {
-    color: #e2e8f0;
-    font-family: 'Segoe UI', sans-serif;
-}
+            col1, col2 = st.columns(2)
 
-h1 {
-    text-align: center;
-    font-weight: 400;
-    color: #ffffff;
-}
+            with col1:
+                b1 = st.button(pregunta['o'][0], use_container_width=True)
+                b2 = st.button(pregunta['o'][1], use_container_width=True)
 
-div.stButton > button {
-    background-color: rgba(15,23,42,0.9);
-    color: #38bdf8;
-    border: 1px solid #0ea5e9;
-    border-radius: 14px;
-    padding: 12px;
-    font-size: 16px;
-    transition: 0.3s;
-}
+            with col2:
+                b3 = st.button(pregunta['o'][2], use_container_width=True)
+                b4 = st.button(pregunta['o'][3], use_container_width=True)
 
-div.stButton > button:hover {
-    background-color: #0ea5e9;
-    color: #020617;
-}
+            seleccion = None
+            if b1: seleccion = pregunta['o'][0]
+            if b2: seleccion = pregunta['o'][1]
+            if b3: seleccion = pregunta['o'][2]
+            if b4: seleccion = pregunta['o'][3]
 
-</style>
+            if seleccion:
+                if seleccion == pregunta['c']:
+                    st.success("✔ Transmisión Correcta")
+                    st.session_state.puntos += 1
+                else:
+                    st.error(f"✘ Error. Respuesta: {pregunta['c']}")
 
-<div class="orbit-container">
-    <div class="earth"></div>
-    <div class="orbit">
-        <div class="satellite-wrapper">
-            <div class="satellite">🛰️</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+                time.sleep(0.5)
 
-# ---------------- MÚSICA ----------------
-st.markdown("""
-<audio autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mp3">
-</audio>
-""", unsafe_allow_html=True)
+                if st.session_state.indice < len(st.session_state.pool_preguntas) - 1:
+                    st.session_state.indice += 1
+                    st.rerun()
+                else:
+                    st.session_state.juego_terminado = True
+                    st.rerun()
 
-# ---------------- PREGUNTAS ----------------
-if 'pool_preguntas' not in st.session_state:
-    st.session_state.pool_preguntas = [
-        {"p": "¿Cuál es la capital de Venezuela?",
-         "o": ["Maracaibo", "Caracas", "Valencia", "Coro"],
-         "c": "Caracas"},
-        {"p": "¿Qué planeta es conocido como el Planeta Rojo?",
-         "o": ["Venus", "Marte", "Júpiter", "Saturno"],
-         "c": "Marte"},
-        {"p": "¿Cuántos bits tiene un byte?",
-         "o": ["4", "16", "32", "8"],
-         "c": "8"},
-        {"p": "¿Qué elemento químico tiene el símbolo 'O'?",
-         "o": ["Oro", "Osmio", "Oxígeno", "Hierro"],
-         "c": "Oxígeno"},
-        {"p": "¿Cuál es el lenguaje de programación de esta App?",
-         "o": ["Java", "C++", "Python", "PHP"],
-         "c": "Python"}
-    ]
-    random.shuffle(st.session_state.pool_preguntas)
-
-# ---------------- ESTADO ----------------
-if 'indice' not in st.session_state:
-    st.session_state.indice = 0
-    st.session_state.puntos = 0
-    st.session_state.juego_terminado = False
-
-# ---------------- INTERFAZ ----------------
-st.title("🌍 Trivia Telecom Orbital")
-st.divider()
-
-if not st.session_state.juego_terminado:
-
-    pregunta = st.session_state.pool_preguntas[st.session_state.indice]
-    st.subheader(f"Pregunta {st.session_state.indice + 1}")
-    st.write(f"### {pregunta['p']}")
-
-    opciones = pregunta['o']
-    col1, col2 = st.columns(2)
-
-    with col1:
-        b1 = st.button(opciones[0], use_container_width=True)
-        b2 = st.button(opciones[1], use_container_width=True)
-
-    with col2:
-        b3 = st.button(opciones[2], use_container_width=True)
-        b4 = st.button(opciones[3], use_container_width=True)
-
-    seleccion = None
-    if b1: seleccion = opciones[0]
-    if b2: seleccion = opciones[1]
-    if b3: seleccion = opciones[2]
-    if b4: seleccion = opciones[3]
-
-    if seleccion:
-        if seleccion == pregunta['c']:
-            st.success("✔ Transmisión Correcta")
-            st.session_state.puntos += 2
         else:
-            st.error(f"✘ Error de señal. Respuesta: {pregunta['c']}")
+            tiempo_final = time.time() - st.session_state.inicio_tiempo
 
-        time.sleep(1)
+            # Guardar en ranking solo una vez
+            if "registrado" not in st.session_state:
+                st.session_state.ranking.append({
+                    "nombre": st.session_state.nombre_usuario,
+                    "tiempo": tiempo_final
+                })
+                st.session_state.registrado = True
 
-        if st.session_state.indice < len(st.session_state.pool_preguntas) - 1:
-            st.session_state.indice += 1
-            st.rerun()
-        else:
-            st.session_state.juego_terminado = True
-            st.rerun()
+            st.success("🛰️ Misión completada")
+            st.metric("⏱️ Tiempo Total", f"{tiempo_final:.2f} seg")
 
-else:
-    st.header("🛰️ Órbita Completada")
-    st.metric("Puntuación Final", f"{st.session_state.puntos}")
-
-    if st.button("🔄 Reiniciar Misión"):
-        st.session_state.indice = 0
-        st.session_state.puntos = 0
-        st.session_state.juego_terminado = False
-        random.shuffle(st.session_state.pool_preguntas)
-        st.rerun()
+            if st.button("🔄 Nueva Misión"):
+                st.session_state.nombre_usuario = None
+                st.session_state.registrado = False
+                st.rerun()
