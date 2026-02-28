@@ -4,43 +4,61 @@ import random
 import time
 
 # --- CONFIGURACIÓN ---
-st.set_page_config(page_title="Trivia Cósmica", page_icon="🌌", layout="centered")
+st.set_page_config(
+    page_title="Trivia Telecom",
+    page_icon="📡",
+    layout="centered"
+)
 
-# --- ESTILO UNIVERSO SUAVE ---
+# --- ESTILO TELECOM + UNIVERSO ANIMADO ---
 st.markdown("""
 <style>
 
 .stApp {
-    background: linear-gradient(to bottom, #0f172a, #1e293b);
-    color: #e2e8f0;
+    background: radial-gradient(circle at center, #0b1120, #020617);
     overflow: hidden;
 }
 
-/* Capa de estrellas */
+/* GRID TELECOM EN MOVIMIENTO */
 .stApp::before {
     content: "";
     position: fixed;
-    top: 0;
-    left: 0;
     width: 200%;
     height: 200%;
     background-image:
-        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.4), transparent),
-        radial-gradient(1.5px 1.5px at 70% 80%, rgba(255,255,255,0.3), transparent),
-        radial-gradient(1px 1px at 40% 60%, rgba(255,255,255,0.2), transparent),
-        radial-gradient(2px 2px at 90% 20%, rgba(255,255,255,0.3), transparent);
-    background-repeat: repeat;
-    animation: moveStars 120s linear infinite;
+        linear-gradient(rgba(56,189,248,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: moveGrid 40s linear infinite;
     z-index: 0;
 }
 
-/* Animación lenta */
-@keyframes moveStars {
-    from { transform: translate(0, 0); }
-    to { transform: translate(-25%, -25%); }
+@keyframes moveGrid {
+    from { transform: translate(0,0); }
+    to { transform: translate(-60px,-60px); }
 }
 
-/* Contenido por encima */
+/* NODOS PULSANTES */
+.stApp::after {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(56,189,248,0.25) 3px, transparent 4px),
+        radial-gradient(circle at 70% 60%, rgba(56,189,248,0.2) 2px, transparent 3px),
+        radial-gradient(circle at 40% 80%, rgba(56,189,248,0.2) 2px, transparent 3px),
+        radial-gradient(circle at 80% 20%, rgba(56,189,248,0.2) 3px, transparent 4px);
+    animation: pulseNodes 6s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+@keyframes pulseNodes {
+    from { opacity: 0.4; }
+    to { opacity: 0.8; }
+}
+
+/* CONTENIDO ENCIMA DEL FONDO */
 .block-container {
     position: relative;
     z-index: 1;
@@ -49,63 +67,83 @@ st.markdown("""
     padding-top: 2rem;
 }
 
-/* Título */
+/* TEXTO */
+html, body {
+    color: #cbd5e1;
+    font-family: 'Segoe UI', sans-serif;
+}
+
 h1 {
     text-align: center;
     font-weight: 400;
-    color: #f1f5f9;
+    color: #e2e8f0;
 }
 
-/* Botones suaves */
+/* BOTONES ESTILO TELECOM */
 div.stButton > button {
-    background-color: #1e293b;
-    color: #e2e8f0;
-    border: 1px solid #334155;
-    border-radius: 12px;
+    background-color: rgba(15,23,42,0.85);
+    color: #38bdf8;
+    border: 1px solid #0ea5e9;
+    border-radius: 14px;
     padding: 12px;
     font-size: 16px;
     transition: 0.3s;
 }
 
 div.stButton > button:hover {
-    background-color: #334155;
-    color: #ffffff;
+    background-color: #0ea5e9;
+    color: #020617;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# --- MÚSICA AMBIENTAL ESPACIAL ---
+# --- MÚSICA AMBIENTAL SUAVE ---
 st.markdown("""
 <audio autoplay loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mp3">
 </audio>
 """, unsafe_allow_html=True)
 
-# --- PREGUNTAS ---
+# --- BASE DE PREGUNTAS ---
 if 'pool_preguntas' not in st.session_state:
     st.session_state.pool_preguntas = [
-        {"p": "¿Cuál es la capital de Venezuela?", "o": ["Maracaibo", "Caracas", "Valencia", "Coro"], "c": "Caracas"},
-        {"p": "¿Qué planeta es conocido como el Planeta Rojo?", "o": ["Venus", "Marte", "Júpiter", "Saturno"], "c": "Marte"},
-        {"p": "¿Cuántos bits tiene un byte?", "o": ["4", "16", "32", "8"], "c": "8"},
-        {"p": "¿Qué elemento químico tiene el símbolo 'O'?", "o": ["Oro", "Osmio", "Oxígeno", "Hierro"], "c": "Oxígeno"},
-        {"p": "¿Cuál es el lenguaje de programación de esta App?", "o": ["Java", "C++", "Python", "PHP"], "c": "Python"}
+        {"p": "¿Cuál es la capital de Venezuela?", 
+         "o": ["Maracaibo", "Caracas", "Valencia", "Coro"], 
+         "c": "Caracas"},
+
+        {"p": "¿Qué planeta es conocido como el Planeta Rojo?", 
+         "o": ["Venus", "Marte", "Júpiter", "Saturno"], 
+         "c": "Marte"},
+
+        {"p": "¿Cuántos bits tiene un byte?", 
+         "o": ["4", "16", "32", "8"], 
+         "c": "8"},
+
+        {"p": "¿Qué elemento químico tiene el símbolo 'O'?", 
+         "o": ["Oro", "Osmio", "Oxígeno", "Hierro"], 
+         "c": "Oxígeno"},
+
+        {"p": "¿Cuál es el lenguaje de programación de esta App?", 
+         "o": ["Java", "C++", "Python", "PHP"], 
+         "c": "Python"}
     ]
     random.shuffle(st.session_state.pool_preguntas)
 
-# --- ESTADO ---
+# --- ESTADO DEL JUEGO ---
 if 'indice' not in st.session_state:
     st.session_state.indice = 0
     st.session_state.puntos = 0
     st.session_state.juego_terminado = False
 
-# --- INTERFAZ ---
-st.title("🌌 Trivia Cósmica TDA")
+# --- INTERFAZ PRINCIPAL ---
+st.title("📡 Trivia Telecom Interactiva")
 st.divider()
 
 if not st.session_state.juego_terminado:
 
     pregunta = st.session_state.pool_preguntas[st.session_state.indice]
+
     st.subheader(f"Pregunta {st.session_state.indice + 1}")
     st.write(f"### {pregunta['p']}")
 
@@ -115,6 +153,7 @@ if not st.session_state.juego_terminado:
     with col1:
         b1 = st.button(opciones[0], use_container_width=True)
         b2 = st.button(opciones[1], use_container_width=True)
+
     with col2:
         b3 = st.button(opciones[2], use_container_width=True)
         b4 = st.button(opciones[3], use_container_width=True)
@@ -127,10 +166,10 @@ if not st.session_state.juego_terminado:
 
     if seleccion:
         if seleccion == pregunta['c']:
-            st.success("Respuesta correcta ✨")
+            st.success("✔ Transmisión Correcta")
             st.session_state.puntos += 2
         else:
-            st.error(f"Incorrecto. Respuesta: {pregunta['c']}")
+            st.error(f"✘ Error de señal. Respuesta: {pregunta['c']}")
 
         time.sleep(1)
 
@@ -142,10 +181,10 @@ if not st.session_state.juego_terminado:
             st.rerun()
 
 else:
-    st.header("🚀 Misión Finalizada")
+    st.header("🛰️ Sesión Finalizada")
     st.metric("Puntuación Final", f"{st.session_state.puntos}")
 
-    if st.button("Reiniciar Misión"):
+    if st.button("🔄 Reiniciar Red"):
         st.session_state.indice = 0
         st.session_state.puntos = 0
         st.session_state.juego_terminado = False
