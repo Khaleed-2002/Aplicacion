@@ -1,15 +1,16 @@
+
 import streamlit as st
 import random
 import time
 
 # --- CONFIGURACIÓN ---
 st.set_page_config(
-    page_title="Trivia Telecom",
-    page_icon="📡",
+    page_title="Trivia Telecom Orbital",
+    page_icon="🌍",
     layout="centered"
 )
 
-# --- ESTILO TELECOM + UNIVERSO + SATÉLITE ---
+# --- ESTILO UNIVERSO + ÓRBITA ---
 st.markdown("""
 <style>
 
@@ -18,62 +19,78 @@ st.markdown("""
     overflow: hidden;
 }
 
-/* GRID TELECOM EN MOVIMIENTO */
+/* GRID DIGITAL SUAVE */
 .stApp::before {
     content: "";
     position: fixed;
     width: 200%;
     height: 200%;
     background-image:
-        linear-gradient(rgba(56,189,248,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,189,248,0.08) 1px, transparent 1px);
-    background-size: 60px 60px;
-    animation: moveGrid 40s linear infinite;
+        linear-gradient(rgba(56,189,248,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.06) 1px, transparent 1px);
+    background-size: 80px 80px;
+    animation: moveGrid 60s linear infinite;
     z-index: 0;
 }
 
 @keyframes moveGrid {
     from { transform: translate(0,0); }
-    to { transform: translate(-60px,-60px); }
+    to { transform: translate(-80px,-80px); }
 }
 
-/* NODOS PULSANTES */
-.stApp::after {
-    content: "";
+/* CONTENEDOR ORBITAL */
+.orbit-container {
     position: fixed;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(circle at 20% 30%, rgba(56,189,248,0.25) 3px, transparent 4px),
-        radial-gradient(circle at 70% 60%, rgba(56,189,248,0.2) 2px, transparent 3px),
-        radial-gradient(circle at 40% 80%, rgba(56,189,248,0.2) 2px, transparent 3px),
-        radial-gradient(circle at 80% 20%, rgba(56,189,248,0.2) 3px, transparent 4px);
-    animation: pulseNodes 6s ease-in-out infinite alternate;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -150px;
+    pointer-events: none;
     z-index: 0;
 }
 
-@keyframes pulseNodes {
-    from { opacity: 0.4; }
-    to { opacity: 0.8; }
+/* TIERRA */
+.earth {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #1e293b 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-top: -45px;
+    margin-left: -45px;
+    box-shadow: 0 0 30px rgba(56,189,248,0.4);
 }
 
-/* SATÉLITE EN ÓRBITA */
+/* ÓRBITA */
+.orbit {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border: 1px dashed rgba(56,189,248,0.2);
+    border-radius: 50%;
+    top: 20px;
+    left: 20px;
+    animation: rotateOrbit 40s linear infinite;
+}
+
+/* SATÉLITE */
 .satellite {
-    position: fixed;
-    top: 20%;
-    left: -10%;
-    font-size: 28px;
-    animation: orbit 60s linear infinite;
-    z-index: 0;
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 26px;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
 }
 
-@keyframes orbit {
-    0%   { transform: translateX(0) translateY(0) rotate(0deg); }
-    25%  { transform: translateX(30vw) translateY(10vh) rotate(90deg); }
-    50%  { transform: translateX(60vw) translateY(0vh) rotate(180deg); }
-    75%  { transform: translateX(30vw) translateY(-10vh) rotate(270deg); }
-    100% { transform: translateX(100vw) translateY(0vh) rotate(360deg); }
+/* ROTACIÓN ORBITAL */
+@keyframes rotateOrbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* CONTENIDO ENCIMA */
@@ -115,11 +132,16 @@ div.stButton > button:hover {
 
 </style>
 
-<div class="satellite">🛰️</div>
+<div class="orbit-container">
+    <div class="earth"></div>
+    <div class="orbit">
+        <div class="satellite">🛰️</div>
+    </div>
+</div>
 
 """, unsafe_allow_html=True)
 
-# --- MÚSICA AMBIENTAL ---
+# --- MÚSICA ESPACIAL SUAVE ---
 st.markdown("""
 <audio autoplay loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mp3">
@@ -158,7 +180,7 @@ if 'indice' not in st.session_state:
     st.session_state.juego_terminado = False
 
 # --- INTERFAZ ---
-st.title("📡 Trivia Telecom Interactiva")
+st.title("🌍 Trivia Telecom Orbital")
 st.divider()
 
 if not st.session_state.juego_terminado:
@@ -201,10 +223,10 @@ if not st.session_state.juego_terminado:
             st.rerun()
 
 else:
-    st.header("🛰️ Sesión Finalizada")
+    st.header("🛰️ Órbita Completada")
     st.metric("Puntuación Final", f"{st.session_state.puntos}")
 
-    if st.button("🔄 Reiniciar Red"):
+    if st.button("🔄 Reiniciar Misión"):
         st.session_state.indice = 0
         st.session_state.puntos = 0
         st.session_state.juego_terminado = False
