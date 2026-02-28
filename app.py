@@ -1,4 +1,28 @@
-import streamlit as st
+# ---------------- PANTALLA DE CARGA ----------------
+if "app_iniciada" not in st.session_state:
+    st.session_state.app_iniciada = False
+
+if not st.session_state.app_iniciada:
+
+    st.markdown("""
+        <h1 style='text-align:center; color:#38bdf8;'>🛰️ Conectando con la Red Satelital...</h1>
+    """, unsafe_allow_html=True)
+
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+
+    for percent in range(0, 101, 5):
+        time.sleep(0.05)
+        progress_bar.progress(percent)
+        status_text.markdown(
+            f"<p style='text-align:center; color:#cbd5e1;'>Estableciendo enlace... {percent}%</p>",
+            unsafe_allow_html=True
+        )
+
+    time.sleep(0.5)
+
+    st.session_state.app_iniciada = True
+    st.rerun()import streamlit as st
 import random
 import time
 
