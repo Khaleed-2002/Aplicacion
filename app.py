@@ -206,22 +206,89 @@ with contenido:
                 st.session_state.juego_terminado = False
                 st.session_state.aciertos = 0  # 👈 contador
 
-                st.session_state.pool_preguntas = [
-                    {"p": "¿Cuál es la capital de Venezuela?",
-                     "o": ["Maracaibo", "Caracas", "Valencia", "Coro"],
-                     "c": "Caracas"},
-                    {"p": "¿Qué planeta es conocido como el Planeta Rojo?",
-                     "o": ["Venus", "Marte", "Júpiter", "Saturno"],
-                     "c": "Marte"},
-                    {"p": "¿Cuántos bits tiene un byte?",
-                     "o": ["4", "16", "32", "8"],
-                     "c": "8"},
-                    {"p": "¿Qué elemento químico tiene el símbolo 'O'?",
-                     "o": ["Oro", "Osmio", "Oxígeno", "Hierro"],
-                     "c": "Oxígeno"},
-                    {"p": "¿Cuál es el lenguaje de programación de esta App?",
-                     "o": ["Java", "C++", "Python", "PHP"],
-                     "c": "Python"},
+               st.session_state.pool_preguntas = [
+
+    {
+        "p": "¿Cuál es el estándar oficial adoptado en Venezuela para la Televisión Digital Abierta (TDA)?",
+        "o": ["DVB-T2", "ATSC 3.0", "ISDB-Tb", "DTMB"],
+        "c": "ISDB-Tb"
+    },
+
+    {
+        "p": "¿Qué técnica de modulación utiliza ISDB-Tb en Venezuela?",
+        "o": ["AM-VSB", "OFDM segmentado", "QAM analógico", "FM digital"],
+        "c": "OFDM segmentado"
+    },
+
+    {
+        "p": "¿Qué ancho de banda ocupa cada canal de TV analógica NTSC en Venezuela?",
+        "o": ["5 MHz", "6 MHz", "7 MHz", "8 MHz"],
+        "c": "6 MHz"
+    },
+
+    {
+        "p": "¿Qué códec de video utiliza la TDA venezolana bajo ISDB-Tb?",
+        "o": ["MPEG-2", "H.264/AVC", "HEVC H.265", "VP9"],
+        "c": "H.264/AVC"
+    },
+
+    {
+        "p": "¿Qué códec de audio emplea ISDB-Tb en Venezuela?",
+        "o": ["MP3", "Dolby Digital", "HE-AAC", "PCM analógico"],
+        "c": "HE-AAC"
+    },
+
+    {
+        "p": "¿Qué característica técnica permite transmitir varios programas en un mismo canal RF digital?",
+        "o": ["Multiplexación", "Intermodulación", "Modulación AM", "Barrido horizontal"],
+        "c": "Multiplexación"
+    },
+
+    {
+        "p": "En televisión digital, el 'efecto cliff' significa:",
+        "o": [
+            "Mejora progresiva de señal",
+            "Pérdida abrupta de señal bajo cierto umbral",
+            "Aumento gradual del ruido",
+            "Cambio automático de frecuencia"
+        ],
+        "c": "Pérdida abrupta de señal bajo cierto umbral"
+    },
+
+    {
+        "p": "¿Qué ventaja ofrece ISDB-Tb para dispositivos móviles?",
+        "o": [
+            "Transmisión FM adicional",
+            "Sistema One-Seg",
+            "Mayor potencia RF",
+            "Eliminación del ruido térmico"
+        ],
+        "c": "Sistema One-Seg"
+    },
+
+    {
+        "p": "En el sistema NTSC analógico, la información de color se transmite mediante:",
+        "o": [
+            "Subportadora de crominancia",
+            "Multiplexación OFDM",
+            "QPSK digital",
+            "Codificación binaria"
+        ],
+        "c": "Subportadora de crominancia"
+    },
+
+    {
+        "p": "¿Cuál es una ventaja espectral de la TV digital frente a la analógica?",
+        "o": [
+            "Ocupa más ancho de banda",
+            "Permite multiprogramación en 6 MHz",
+            "Mayor interferencia",
+            "No requiere compresión"
+        ],
+        "c": "Permite multiprogramación en 6 MHz"
+    }
+
+]
                 ]
 
                 random.shuffle(st.session_state.pool_preguntas)
