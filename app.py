@@ -193,9 +193,14 @@ html, body {
 
 # ---------------- MÚSICA ----------------
 st.markdown("""
-<audio autoplay loop>
+<audio autoplay loop controls style="display:none;" id="bg-music">
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mp3">
 </audio>
+
+<script>
+var audio = document.getElementById("bg-music");
+audio.volume = 0.35;
+</script>
 """, unsafe_allow_html=True)
 
 # ---------------- DISEÑO EN COLUMNAS ----------------
