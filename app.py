@@ -9,6 +9,113 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+
+/* FONDO UNIVERSO */
+.stApp {
+    background: radial-gradient(circle at center, #0b1120, #020617);
+    overflow: hidden;
+}
+
+/* GRID TELECOM ANIMADO */
+.stApp::before {
+    content: "";
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    background-image:
+        linear-gradient(rgba(56,189,248,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
+    animation: moveGrid 80s linear infinite;
+    z-index: 0;
+}
+
+@keyframes moveGrid {
+    from { transform: translate(0,0); }
+    to { transform: translate(-80px,-80px); }
+}
+
+/* SISTEMA ORBITAL */
+.orbit-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 280px;
+    height: 280px;
+    margin-top: -140px;
+    margin-left: -140px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+}
+
+.earth {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #1e293b 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-top: -45px;
+    margin-left: -45px;
+    box-shadow: 0 0 18px rgba(56,189,248,0.35);
+}
+
+.orbit {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border: 1px dashed rgba(56,189,248,0.2);
+    border-radius: 50%;
+    top: 10px;
+    left: 10px;
+    animation: rotateOrbit 40s linear infinite;
+}
+
+.satellite-wrapper {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.satellite {
+    font-size: 26px;
+    animation: counterRotate 40s linear infinite;
+}
+
+@keyframes rotateOrbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes counterRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+
+/* PROTEGER CONTENIDO */
+.block-container {
+    position: relative;
+    z-index: 1;
+}
+
+</style>
+
+<div class="orbit-container">
+    <div class="earth"></div>
+    <div class="orbit">
+        <div class="satellite-wrapper">
+            <div class="satellite">🛰️</div>
+        </div>
+    </div>
+</div>
+
+""", unsafe_allow_html=True)
+
 # ---------------- ESTADOS INICIALES ----------------
 if "ranking" not in st.session_state:
     st.session_state.ranking = []
