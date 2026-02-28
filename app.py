@@ -1,4 +1,3 @@
- #jesus
 import streamlit as st
 import random
 import time
@@ -10,7 +9,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- ESTILO TELECOM + UNIVERSO ANIMADO ---
+# --- ESTILO TELECOM + UNIVERSO + SATÉLITE ---
 st.markdown("""
 <style>
 
@@ -58,7 +57,26 @@ st.markdown("""
     to { opacity: 0.8; }
 }
 
-/* CONTENIDO ENCIMA DEL FONDO */
+/* SATÉLITE EN ÓRBITA */
+.satellite {
+    position: fixed;
+    top: 20%;
+    left: -10%;
+    font-size: 28px;
+    animation: orbit 60s linear infinite;
+    z-index: 0;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
+}
+
+@keyframes orbit {
+    0%   { transform: translateX(0) translateY(0) rotate(0deg); }
+    25%  { transform: translateX(30vw) translateY(10vh) rotate(90deg); }
+    50%  { transform: translateX(60vw) translateY(0vh) rotate(180deg); }
+    75%  { transform: translateX(30vw) translateY(-10vh) rotate(270deg); }
+    100% { transform: translateX(100vw) translateY(0vh) rotate(360deg); }
+}
+
+/* CONTENIDO ENCIMA */
 .block-container {
     position: relative;
     z-index: 1;
@@ -79,7 +97,7 @@ h1 {
     color: #e2e8f0;
 }
 
-/* BOTONES ESTILO TELECOM */
+/* BOTONES TELECOM */
 div.stButton > button {
     background-color: rgba(15,23,42,0.85);
     color: #38bdf8;
@@ -96,54 +114,56 @@ div.stButton > button:hover {
 }
 
 </style>
+
+<div class="satellite">🛰️</div>
+
 """, unsafe_allow_html=True)
 
-# --- MÚSICA AMBIENTAL SUAVE ---
+# --- MÚSICA AMBIENTAL ---
 st.markdown("""
 <audio autoplay loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mp3">
 </audio>
 """, unsafe_allow_html=True)
 
-# --- BASE DE PREGUNTAS ---
+# --- PREGUNTAS ---
 if 'pool_preguntas' not in st.session_state:
     st.session_state.pool_preguntas = [
-        {"p": "¿Cuál es la capital de Venezuela?", 
-         "o": ["Maracaibo", "Caracas", "Valencia", "Coro"], 
+        {"p": "¿Cuál es la capital de Venezuela?",
+         "o": ["Maracaibo", "Caracas", "Valencia", "Coro"],
          "c": "Caracas"},
 
-        {"p": "¿Qué planeta es conocido como el Planeta Rojo?", 
-         "o": ["Venus", "Marte", "Júpiter", "Saturno"], 
+        {"p": "¿Qué planeta es conocido como el Planeta Rojo?",
+         "o": ["Venus", "Marte", "Júpiter", "Saturno"],
          "c": "Marte"},
 
-        {"p": "¿Cuántos bits tiene un byte?", 
-         "o": ["4", "16", "32", "8"], 
+        {"p": "¿Cuántos bits tiene un byte?",
+         "o": ["4", "16", "32", "8"],
          "c": "8"},
 
-        {"p": "¿Qué elemento químico tiene el símbolo 'O'?", 
-         "o": ["Oro", "Osmio", "Oxígeno", "Hierro"], 
+        {"p": "¿Qué elemento químico tiene el símbolo 'O'?",
+         "o": ["Oro", "Osmio", "Oxígeno", "Hierro"],
          "c": "Oxígeno"},
 
-        {"p": "¿Cuál es el lenguaje de programación de esta App?", 
-         "o": ["Java", "C++", "Python", "PHP"], 
+        {"p": "¿Cuál es el lenguaje de programación de esta App?",
+         "o": ["Java", "C++", "Python", "PHP"],
          "c": "Python"}
     ]
     random.shuffle(st.session_state.pool_preguntas)
 
-# --- ESTADO DEL JUEGO ---
+# --- ESTADO ---
 if 'indice' not in st.session_state:
     st.session_state.indice = 0
     st.session_state.puntos = 0
     st.session_state.juego_terminado = False
 
-# --- INTERFAZ PRINCIPAL ---
+# --- INTERFAZ ---
 st.title("📡 Trivia Telecom Interactiva")
 st.divider()
 
 if not st.session_state.juego_terminado:
 
     pregunta = st.session_state.pool_preguntas[st.session_state.indice]
-
     st.subheader(f"Pregunta {st.session_state.indice + 1}")
     st.write(f"### {pregunta['p']}")
 
