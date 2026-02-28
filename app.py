@@ -1,28 +1,4 @@
-# ---------------- PANTALLA DE CARGA ----------------
-if "app_iniciada" not in st.session_state:
-    st.session_state.app_iniciada = False
-
-if not st.session_state.app_iniciada:
-
-    st.markdown("""
-        <h1 style='text-align:center; color:#38bdf8;'>🛰️ Conectando con la Red Satelital...</h1>
-    """, unsafe_allow_html=True)
-
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-
-    for percent in range(0, 101, 5):
-        time.sleep(0.05)
-        progress_bar.progress(percent)
-        status_text.markdown(
-            f"<p style='text-align:center; color:#cbd5e1;'>Estableciendo enlace... {percent}%</p>",
-            unsafe_allow_html=True
-        )
-
-    time.sleep(0.5)
-
-    st.session_state.app_iniciada = True
-    st.rerun()import streamlit as st
+import streamlit as st
 import random
 import time
 
@@ -33,6 +9,41 @@ st.set_page_config(
     layout="centered"
 )
 
+# ---------------- PANTALLA DE CARGA ----------------
+if "app_iniciada" not in st.session_state:
+    st.session_state.app_iniciada = False
+
+if not st.session_state.app_iniciada:
+
+    st.markdown("""
+        <h1 style='text-align:center; color:#38bdf8;'>
+        🛰️ Estableciendo Enlace Satelital...
+        </h1>
+    """, unsafe_allow_html=True)
+
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+
+    mensajes = [
+        "Inicializando sistema orbital...",
+        "Sincronizando satélite...",
+        "Ajustando vector de antena...",
+        "Estableciendo uplink...",
+        "Conexión establecida ✔"
+    ]
+
+    for i in range(0, 101, 5):
+        time.sleep(0.05)
+        progress_bar.progress(i)
+        status_text.markdown(
+            f"<p style='text-align:center; color:#cbd5e1;'>{mensajes[min(i//20,4)]}</p>",
+            unsafe_allow_html=True
+        )
+
+    time.sleep(0.5)
+    st.session_state.app_iniciada = True
+    st.rerun()
+
 # ---------------- ESTILO COMPLETO ----------------
 st.markdown("""
 <style>
@@ -42,7 +53,7 @@ st.markdown("""
     overflow: hidden;
 }
 
-/* GRID DIGITAL SUAVE */
+/* GRID DIGITAL */
 .stApp::before {
     content: "";
     position: fixed;
@@ -76,7 +87,6 @@ st.markdown("""
     opacity: 0.35;
 }
 
-/* TIERRA */
 .earth {
     position: absolute;
     width: 80px;
@@ -90,7 +100,6 @@ st.markdown("""
     box-shadow: 0 0 12px rgba(56,189,248,0.25);
 }
 
-/* ÓRBITA */
 .orbit {
     position: absolute;
     width: 240px;
@@ -102,7 +111,6 @@ st.markdown("""
     animation: rotateOrbit 40s linear infinite;
 }
 
-/* CONTENEDOR SATÉLITE */
 .satellite-wrapper {
     position: absolute;
     top: -14px;
@@ -110,13 +118,11 @@ st.markdown("""
     transform: translateX(-50%);
 }
 
-/* SATÉLITE CON CONTRARROTACIÓN */
 .satellite {
     font-size: 24px;
     animation: counterRotate 40s linear infinite;
 }
 
-/* ANIMACIONES */
 @keyframes rotateOrbit {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
@@ -152,7 +158,6 @@ h1 {
     color: #ffffff;
 }
 
-/* BOTONES */
 div.stButton > button {
     background-color: rgba(15,23,42,0.9);
     color: #38bdf8;
@@ -178,7 +183,6 @@ div.stButton > button:hover {
         </div>
     </div>
 </div>
-
 """, unsafe_allow_html=True)
 
 # ---------------- MÚSICA ----------------
