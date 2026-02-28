@@ -1,3 +1,5 @@
+#Jesus R
+## ELCA :D###
 import streamlit as st
 import random
 import time
@@ -9,6 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------- FONDO Y ESTILO GLOBAL ----------------
 st.markdown("""
 <style>
 
@@ -42,10 +45,10 @@ st.markdown("""
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 280px;
-    height: 280px;
-    margin-top: -140px;
-    margin-left: -140px;
+    width: 300px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -150px;
     pointer-events: none;
     z-index: 0;
     opacity: 0.35;
@@ -53,21 +56,21 @@ st.markdown("""
 
 .earth {
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
     background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #1e293b 70%);
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    margin-top: -45px;
-    margin-left: -45px;
-    box-shadow: 0 0 18px rgba(56,189,248,0.35);
+    margin-top: -50px;
+    margin-left: -50px;
+    box-shadow: 0 0 20px rgba(56,189,248,0.4);
 }
 
 .orbit {
     position: absolute;
-    width: 260px;
-    height: 260px;
+    width: 280px;
+    height: 280px;
     border: 1px dashed rgba(56,189,248,0.2);
     border-radius: 50%;
     top: 10px;
@@ -77,13 +80,13 @@ st.markdown("""
 
 .satellite-wrapper {
     position: absolute;
-    top: -16px;
+    top: -18px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .satellite {
-    font-size: 26px;
+    font-size: 28px;
     animation: counterRotate 40s linear infinite;
 }
 
@@ -113,182 +116,123 @@ st.markdown("""
         </div>
     </div>
 </div>
-
 """, unsafe_allow_html=True)
 
-# ---------------- ESTADOS INICIALES ----------------
+# ---------------- ESTADOS ----------------
 if "ranking" not in st.session_state:
     st.session_state.ranking = []
-
-if "nombre_usuario" not in st.session_state:
-    st.session_state.nombre_usuario = None
-
-if "inicio_tiempo" not in st.session_state:
-    st.session_state.inicio_tiempo = None
 
 if "app_iniciada" not in st.session_state:
     st.session_state.app_iniciada = False
 
 # ---------------- PANTALLA DE CARGA ----------------
 if not st.session_state.app_iniciada:
-
     st.markdown("<h1 style='text-align:center;color:#38bdf8;'>🛰️ Estableciendo Enlace Satelital...</h1>", unsafe_allow_html=True)
-
     barra = st.progress(0)
     for i in range(101):
         time.sleep(0.02)
         barra.progress(i)
-
     st.session_state.app_iniciada = True
     st.rerun()
 
-# ---------------- DISEÑO EN COLUMNAS ----------------
-contenido, ranking_col = st.columns([3, 1])
-
-# ---------------- PANEL RANKING ----------------
-with ranking_col:
-    st.markdown("## 🏆 Ranking Orbital")
-
-    if st.session_state.ranking:
-
-        # Ordenar por más aciertos y menor tiempo
-        ranking_ordenado = sorted(
-            st.session_state.ranking,
-            key=lambda x: (-x["aciertos"], x["tiempo"])
-        )
-
-        for i, jugador in enumerate(ranking_ordenado, start=1):
-            st.markdown(
-                f"""
-                <div style="
-                    background: rgba(15,23,42,0.65);
-                    padding:12px;
-                    margin-bottom:10px;
-                    border-radius:14px;
-                    border:1px solid rgba(56,189,248,0.3);
-                ">
-                    <b>{i}. {jugador['nombre']}</b><br>
-                    ⏱️ {jugador['tiempo']:.2f} seg<br>
-                    📊 {jugador['aciertos']} / {jugador['total']}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-    else:
-        st.info("Sin registros aún.")
-# Musica
+# ---------------- MUSICA ----------------
 st.markdown("""
-<audio autoplay loop controls style="display:none;" id="bg-music">
+<audio autoplay loop id="bg-music">
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mp3">
 </audio>
-
 <script>
 var audio = document.getElementById("bg-music");
 audio.volume = 0.35;
 </script>
 """, unsafe_allow_html=True)
+
+# ---------------- COLUMNAS ----------------
+contenido, ranking_col = st.columns([3,1])
+
+# ---------------- RANKING ----------------
+with ranking_col:
+    st.markdown("## 🏆 Ranking Orbital")
+
+    if st.session_state.ranking:
+        ranking_ordenado = sorted(
+            st.session_state.ranking,
+            key=lambda x: (-x["aciertos"], x["tiempo"])
+        )
+        for i, jugador in enumerate(ranking_ordenado, start=1):
+            st.markdown(f"""
+            <div style="
+                background: rgba(15,23,42,0.7);
+                padding:12px;
+                margin-bottom:10px;
+                border-radius:14px;
+                border:1px solid rgba(56,189,248,0.3);
+            ">
+                <b>{i}. {jugador['nombre']}</b><br>
+                ⏱️ {jugador['tiempo']:.2f} seg<br>
+                📊 {jugador['aciertos']} / {jugador['total']}
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.info("Sin registros aún.")
+
 # ---------------- CONTENIDO PRINCIPAL ----------------
 with contenido:
 
     st.title("🌍 Trivia Telecom Orbital")
     st.divider()
 
-    # Pedir nombre
-    if not st.session_state.nombre_usuario:
+    if "nombre_usuario" not in st.session_state:
 
-        nombre = st.text_input("👤 Ingrese su nombre para iniciar misión")
+        nombre = st.text_input("👤 Ingrese su nombre")
 
         if st.button("🚀 Iniciar Misión"):
             if nombre.strip():
                 st.session_state.nombre_usuario = nombre
                 st.session_state.inicio_tiempo = time.time()
                 st.session_state.indice = 0
+                st.session_state.aciertos = 0
                 st.session_state.juego_terminado = False
-                st.session_state.aciertos = 0  # 👈 contador
 
-               st.session_state.pool_preguntas = [
+                st.session_state.pool_preguntas = [
+                    {"p":"¿Cuál es el estándar oficial adoptado en Venezuela para TDA?",
+                     "o":["DVB-T2","ATSC 3.0","ISDB-Tb","DTMB"],
+                     "c":"ISDB-Tb"},
 
-    {
-        "p": "¿Cuál es el estándar oficial adoptado en Venezuela para la Televisión Digital Abierta (TDA)?",
-        "o": ["DVB-T2", "ATSC 3.0", "ISDB-Tb", "DTMB"],
-        "c": "ISDB-Tb"
-    },
+                    {"p":"¿Qué técnica de modulación utiliza ISDB-Tb?",
+                     "o":["AM-VSB","OFDM segmentado","QAM analógico","FM digital"],
+                     "c":"OFDM segmentado"},
 
-    {
-        "p": "¿Qué técnica de modulación utiliza ISDB-Tb en Venezuela?",
-        "o": ["AM-VSB", "OFDM segmentado", "QAM analógico", "FM digital"],
-        "c": "OFDM segmentado"
-    },
+                    {"p":"¿Qué ancho de banda ocupa un canal NTSC en Venezuela?",
+                     "o":["5 MHz","6 MHz","7 MHz","8 MHz"],
+                     "c":"6 MHz"},
 
-    {
-        "p": "¿Qué ancho de banda ocupa cada canal de TV analógica NTSC en Venezuela?",
-        "o": ["5 MHz", "6 MHz", "7 MHz", "8 MHz"],
-        "c": "6 MHz"
-    },
+                    {"p":"¿Qué códec de video usa la TDA venezolana?",
+                     "o":["MPEG-2","H.264/AVC","HEVC","VP9"],
+                     "c":"H.264/AVC"},
 
-    {
-        "p": "¿Qué códec de video utiliza la TDA venezolana bajo ISDB-Tb?",
-        "o": ["MPEG-2", "H.264/AVC", "HEVC H.265", "VP9"],
-        "c": "H.264/AVC"
-    },
+                    {"p":"¿Qué códec de audio usa ISDB-Tb?",
+                     "o":["MP3","Dolby Digital","HE-AAC","PCM"],
+                     "c":"HE-AAC"},
 
-    {
-        "p": "¿Qué códec de audio emplea ISDB-Tb en Venezuela?",
-        "o": ["MP3", "Dolby Digital", "HE-AAC", "PCM analógico"],
-        "c": "HE-AAC"
-    },
+                    {"p":"¿Qué permite transmitir varios programas en un mismo canal RF?",
+                     "o":["Multiplexación","Intermodulación","AM","Barrido"],
+                     "c":"Multiplexación"},
 
-    {
-        "p": "¿Qué característica técnica permite transmitir varios programas en un mismo canal RF digital?",
-        "o": ["Multiplexación", "Intermodulación", "Modulación AM", "Barrido horizontal"],
-        "c": "Multiplexación"
-    },
+                    {"p":"El efecto 'cliff' en TV digital significa:",
+                     "o":["Mejora progresiva","Pérdida abrupta bajo umbral","Más ruido","Cambio frecuencia"],
+                     "c":"Pérdida abrupta bajo umbral"},
 
-    {
-        "p": "En televisión digital, el 'efecto cliff' significa:",
-        "o": [
-            "Mejora progresiva de señal",
-            "Pérdida abrupta de señal bajo cierto umbral",
-            "Aumento gradual del ruido",
-            "Cambio automático de frecuencia"
-        ],
-        "c": "Pérdida abrupta de señal bajo cierto umbral"
-    },
+                    {"p":"¿Qué ventaja móvil ofrece ISDB-Tb?",
+                     "o":["FM extra","One-Seg","Más potencia","Sin ruido"],
+                     "c":"One-Seg"},
 
-    {
-        "p": "¿Qué ventaja ofrece ISDB-Tb para dispositivos móviles?",
-        "o": [
-            "Transmisión FM adicional",
-            "Sistema One-Seg",
-            "Mayor potencia RF",
-            "Eliminación del ruido térmico"
-        ],
-        "c": "Sistema One-Seg"
-    },
+                    {"p":"En NTSC el color se transmite mediante:",
+                     "o":["Subportadora de crominancia","OFDM","QPSK","Binaria"],
+                     "c":"Subportadora de crominancia"},
 
-    {
-        "p": "En el sistema NTSC analógico, la información de color se transmite mediante:",
-        "o": [
-            "Subportadora de crominancia",
-            "Multiplexación OFDM",
-            "QPSK digital",
-            "Codificación binaria"
-        ],
-        "c": "Subportadora de crominancia"
-    },
-
-    {
-        "p": "¿Cuál es una ventaja espectral de la TV digital frente a la analógica?",
-        "o": [
-            "Ocupa más ancho de banda",
-            "Permite multiprogramación en 6 MHz",
-            "Mayor interferencia",
-            "No requiere compresión"
-        ],
-        "c": "Permite multiprogramación en 6 MHz"
-    }
-
-]
+                    {"p":"Ventaja espectral de TV digital frente a analógica:",
+                     "o":["Más ancho banda","Multiprogramación en 6 MHz","Más interferencia","Sin compresión"],
+                     "c":"Multiprogramación en 6 MHz"},
                 ]
 
                 random.shuffle(st.session_state.pool_preguntas)
@@ -296,19 +240,16 @@ with contenido:
 
     else:
 
-        if not st.session_state.get("juego_terminado", False):
+        if not st.session_state.juego_terminado:
 
             pregunta = st.session_state.pool_preguntas[st.session_state.indice]
-
-            st.subheader(f"Pregunta {st.session_state.indice + 1}")
+            st.subheader(f"Pregunta {st.session_state.indice+1}")
             st.write(f"### {pregunta['p']}")
 
-            col1, col2 = st.columns(2)
-
+            col1,col2 = st.columns(2)
             with col1:
                 b1 = st.button(pregunta['o'][0], use_container_width=True)
                 b2 = st.button(pregunta['o'][1], use_container_width=True)
-
             with col2:
                 b3 = st.button(pregunta['o'][2], use_container_width=True)
                 b4 = st.button(pregunta['o'][3], use_container_width=True)
@@ -321,14 +262,14 @@ with contenido:
 
             if seleccion:
                 if seleccion == pregunta['c']:
-                    st.success("✔ Transmisión Correcta")
-                    st.session_state.aciertos += 1  # 👈 suma correcta
+                    st.success("✔ Correcto")
+                    st.session_state.aciertos += 1
                 else:
-                    st.error(f"✘ Error. Respuesta: {pregunta['c']}")
+                    st.error(f"✘ Incorrecto. Respuesta: {pregunta['c']}")
 
                 time.sleep(0.5)
 
-                if st.session_state.indice < len(st.session_state.pool_preguntas) - 1:
+                if st.session_state.indice < len(st.session_state.pool_preguntas)-1:
                     st.session_state.indice += 1
                     st.rerun()
                 else:
@@ -336,26 +277,27 @@ with contenido:
                     st.rerun()
 
         else:
-
             tiempo_final = time.time() - st.session_state.inicio_tiempo
-            total_preguntas = len(st.session_state.pool_preguntas)
+            total = len(st.session_state.pool_preguntas)
 
-            # Guardar en ranking una sola vez
             if "registrado" not in st.session_state:
                 st.session_state.ranking.append({
                     "nombre": st.session_state.nombre_usuario,
                     "tiempo": tiempo_final,
                     "aciertos": st.session_state.aciertos,
-                    "total": total_preguntas
+                    "total": total
                 })
                 st.session_state.registrado = True
 
             st.success("🛰️ Misión completada")
             st.metric("⏱️ Tiempo Total", f"{tiempo_final:.2f} seg")
-            st.metric("📊 Resultado", f"{st.session_state.aciertos} / {total_preguntas}")
+            st.metric("📊 Resultado Final", f"{st.session_state.aciertos} / {total}")
 
             if st.button("🔄 Nueva Misión"):
-                for key in ["nombre_usuario", "registrado"]:
+                for key in ["nombre_usuario","registrado"]:
                     if key in st.session_state:
                         del st.session_state[key]
                 st.rerun()
+
+
+          
