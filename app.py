@@ -19,17 +19,17 @@ st.markdown("""
     overflow: hidden;
 }
 
-/* GRID DIGITAL SUAVE */
+/* GRID SUAVE */
 .stApp::before {
     content: "";
     position: fixed;
     width: 200%;
     height: 200%;
     background-image:
-        linear-gradient(rgba(56,189,248,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,189,248,0.06) 1px, transparent 1px);
+        linear-gradient(rgba(56,189,248,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.05) 1px, transparent 1px);
     background-size: 80px 80px;
-    animation: moveGrid 60s linear infinite;
+    animation: moveGrid 80s linear infinite;
     z-index: 0;
 }
 
@@ -38,85 +38,87 @@ st.markdown("""
     to { transform: translate(-80px,-80px); }
 }
 
-/* CONTENEDOR ORBITAL */
+/* CONTENEDOR ORBITAL MÁS SUAVE */
 .orbit-container {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 300px;
-    height: 300px;
-    margin-top: -150px;
-    margin-left: -150px;
+    width: 280px;
+    height: 280px;
+    margin-top: -140px;
+    margin-left: -140px;
     pointer-events: none;
     z-index: 0;
+    opacity: 0.35; /* 🔹 Baja intensidad general */
 }
 
-/* TIERRA */
+/* TIERRA CON MENOS BRILLO */
 .earth {
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     background: radial-gradient(circle at 30% 30%, #38bdf8, #0ea5e9 40%, #1e293b 70%);
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    margin-top: -45px;
-    margin-left: -45px;
-    box-shadow: 0 0 30px rgba(56,189,248,0.4);
+    margin-top: -40px;
+    margin-left: -40px;
+    box-shadow: 0 0 12px rgba(56,189,248,0.25); /* 🔹 brillo reducido */
 }
 
 /* ÓRBITA */
 .orbit {
     position: absolute;
-    width: 260px;
-    height: 260px;
-    border: 1px dashed rgba(56,189,248,0.2);
+    width: 240px;
+    height: 240px;
+    border: 1px dashed rgba(56,189,248,0.15);
     border-radius: 50%;
     top: 20px;
     left: 20px;
-    animation: rotateOrbit 40s linear infinite;
+    animation: rotateOrbit 50s linear infinite;
 }
 
-/* SATÉLITE */
 .satellite {
     position: absolute;
     top: -14px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 26px;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
+    font-size: 22px;
 }
 
-/* ROTACIÓN ORBITAL */
 @keyframes rotateOrbit {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-/* CONTENIDO ENCIMA */
+/* 🔹 CAPA OSCURA DETRÁS DEL CONTENIDO */
 .block-container {
     position: relative;
     z-index: 1;
     max-width: 750px;
     margin: auto;
     padding-top: 2rem;
+    background: rgba(2, 6, 23, 0.65);  /* mejora contraste */
+    backdrop-filter: blur(4px);
+    border-radius: 18px;
+    padding: 30px;
 }
 
-/* TEXTO */
+/* TEXTO MÁS LEGIBLE */
 html, body {
-    color: #cbd5e1;
+    color: #e2e8f0;
     font-family: 'Segoe UI', sans-serif;
 }
 
 h1 {
     text-align: center;
     font-weight: 400;
-    color: #e2e8f0;
+    color: #ffffff;
 }
 
-/* BOTONES TELECOM */
+/* BOTONES */
 div.stButton > button {
-    background-color: rgba(15,23,42,0.85);
+    background-color: rgba(15,23,42,0.9);
     color: #38bdf8;
     border: 1px solid #0ea5e9;
     border-radius: 14px;
@@ -138,7 +140,6 @@ div.stButton > button:hover {
         <div class="satellite">🛰️</div>
     </div>
 </div>
-
 """, unsafe_allow_html=True)
 
 # --- MÚSICA ESPACIAL SUAVE ---
